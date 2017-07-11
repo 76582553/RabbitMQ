@@ -1,25 +1,33 @@
 package publish;
 
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.DefaultConsumer;
-import com.rabbitmq.client.Envelope;
+import com.rabbitmq.client.*;
 
 import java.io.IOException;
 
 /**
  * Created by x on 2017/7/10.
  */
-public class Custom extends Base {
+public class Custom {
 
-    public Custom(String baseName) throws Exception {
 
-        super(baseName);
-    }
 
-    public void recieve() throws Exception {
+    public static void main(String args[]) throws Exception {
 
-        Consumer consumer = new DefaultConsumer(super.channel) {
+        String baseName = "MyQueue";
+
+
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setUsername("test");
+        factory.setPassword("test");
+        //设置host
+        factory.setHost("119.23.12.203");
+        factory.setVirtualHost("/");
+        factory.setPort(5672);
+        Connection connection = factory.newConnection();
+        Channel channel = connection.createChannel();
+
+
+        Consumer consumer = new DefaultConsumer(channel) {
 
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
@@ -29,8 +37,10 @@ public class Custom extends Base {
                 System.out.println("-->收到消息了..消息是--->" + message);
             }
         };
-        super.channel.basicConsume(super.baseName, true, consumer);
-        close();
+        channel.basicConsume(baseName, true, consumer);
+      /*  channel.close();
+        connection.close();*/
+        //不关闭的情况下一直都可以收到消息
 
     }
 
