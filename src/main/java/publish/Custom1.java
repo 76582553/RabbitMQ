@@ -7,13 +7,8 @@ import java.io.IOException;
 /**
  * Created by x on 2017/7/10.
  */
-public class Custom {
-    /**
-     *  两个custom同时等待消息，消息被接收，但是A接收到消息1，B就接收不到了
-     *  B能接收到消息2，同理A就接收不到消息1
-     * @param args
-     * @throws Exception
-     */
+public class Custom1 {
+
 
 
     public static void main(String args[]) throws Exception {
@@ -37,9 +32,9 @@ public class Custom {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
 
-                System.out.println("进来了....");
+                System.out.println("1进来了....");
                 String message = new String(body, "UTF-8");
-                System.out.println("-->收到消息了..消息是--->" + message);
+                System.out.println("-->1收到消息了..消息是--->" + message);
             }
         };
         channel.basicConsume(baseName, true, consumer);
